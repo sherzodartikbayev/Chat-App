@@ -13,8 +13,6 @@ const io = new Server(server, {
 })
 
 io.on('connection', socket => {
-	console.log('Connection', socket.id)
-
 	socket.on('send_message', message => {
 		socket.broadcast.emit('receive_message', message)
 	})
@@ -24,6 +22,7 @@ io.on('connection', socket => {
 	})
 
 	socket.on('new_user', data => {
+		console.log(data)
 		socket.broadcast.emit('new_user', data)
 	})
 })

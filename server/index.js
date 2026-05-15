@@ -13,6 +13,8 @@ const io = new Server(server, {
 })
 
 io.on('connection', socket => {
+	console.log('Connection', socket.id)
+
 	socket.on('send_message', message => {
 		socket.broadcast.emit('receive_message', message)
 	})

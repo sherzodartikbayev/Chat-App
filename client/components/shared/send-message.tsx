@@ -12,6 +12,9 @@ import {
 	useState,
 } from 'react'
 import { Socket } from 'socket.io-client'
+import { Input } from '../ui/input'
+import { Button } from '../ui/button'
+import { Send, Upload } from 'lucide-react'
 
 interface SendMessageProps {
 	user: User
@@ -42,7 +45,7 @@ const SendMessage: FC<SendMessageProps> = ({ socket, setChat, user }) => {
 	useEffect(() => {
 		if (!isFocused && !input) {
 			const interval = setInterval(() => {
-				setPlaceholderIndex(p => p + 1 / PLACEHOLDERS.length)
+				setPlaceholderIndex(p => p + (1 % PLACEHOLDERS.length))
 			}, 3000)
 
 			return () => clearInterval(interval)
@@ -116,7 +119,65 @@ const SendMessage: FC<SendMessageProps> = ({ socket, setChat, user }) => {
 		}
 	}
 
-	return <div>SendMessage</div>
+	return (
+		<div
+			className='fixed inset-x-0 bottom-0 z-20 flex justify-center px-3 pb-3'
+			onDrop={handleDrop}
+			onDragOver={e => {
+				e.preventDefault()
+				setIsDragging(true)
+			}}
+			onDragLeave={() => setIsDragging(false)}
+		>
+			<div className='flex w-full max-w-4xl items-end gap-2 rounded-3xl border border-blue-500 bg-slate-950 px-3 py-2'>
+				<Input
+					value={input}
+					onChange={handleTyping}
+					onKeyDown={handleKeydown}
+					onFocus={() => setIsFocused(true)}
+					onBlur={() => setIsFocused(false)}
+					placeholder={PLACEHOLDERS[placeholderIndex]}
+					className='flex-1 bg-transparent text-white border-blue-500'
+				/>
+
+				<Input
+					ref={uploadInput}
+					type='file'
+					hidden
+					accept='image/jprg, image/png'
+					onChange={handleImageUpload}
+				/>
+
+				<Button size='icon' onClick={handleSendText}>
+					{hasContent ? <Send /> : <Upload />}
+				</Button>
+
+				<div className='relative'>
+					{hasContent && (
+						<div className='absolute bottom-2 -right-2 flex items-center gap-1.5'>
+							<div
+								className={`transition-colors duration-300 ${chargeCounts > 500 ? 'text-red-400' : 'text-white'}`}
+							>
+								<p className='text-[10px] font-medium text-2xl'>
+									{chargeCounts}
+								</p>
+							</div>
+							{chargeCounts > 0 && (
+								<div className='h-1 w-1 rounded-full bg-sky-400 animate-pulse' />
+							)}
+						</div>
+					)}
+				</div>
+
+				{!hasContent && !isFocused && (
+					<div className='absolute bottom-5 left-1/2 -translate-x-1/2 hidden md:flex items-center gap-1.5 rounded-full border border-slate-700/50 bg-slate-900/80 px-2.5 py-1 backdrop-filter animate-pulse'>
+						<kbd className='text-[10px] font-medium text-white'>Enter</kbd>
+						<span className='text-[10px] text-white'>to send</span>
+					</div>
+				)}
+			</div>
+		</div>
+	)
 }
 
 export default SendMessage

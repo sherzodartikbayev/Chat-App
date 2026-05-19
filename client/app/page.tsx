@@ -1,6 +1,7 @@
 'use client'
 
 import JoinForm from '@/components/shared/join-form'
+import SendMessage from '@/components/shared/send-message'
 import { ChatMessage, User } from '@/types/chat'
 import { useEffect, useRef, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
@@ -64,7 +65,13 @@ const HomePage = () => {
 
 			<div className='relative z-10 flex h-full w-full max-w-6xl flex-col'>
 				{hasUser ? (
-					<p>User</p>
+					<>
+						<SendMessage
+							setChat={setChat}
+							socket={socket}
+							user={userRef.current!}
+						/>
+					</>
 				) : (
 					<JoinForm
 						user={userRef}

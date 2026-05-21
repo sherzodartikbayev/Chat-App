@@ -1,5 +1,6 @@
 'use client'
 
+import Chat from '@/components/shared/chat'
 import JoinForm from '@/components/shared/join-form'
 import SendMessage from '@/components/shared/send-message'
 import { ChatMessage, User } from '@/types/chat'
@@ -66,6 +67,7 @@ const HomePage = () => {
 			<div className='relative z-10 flex h-full w-full max-w-6xl flex-col'>
 				{hasUser ? (
 					<>
+						<Chat typing={typing} user={userRef.current!} chat={chat} />
 						<SendMessage
 							setChat={setChat}
 							socket={socket}

@@ -15,6 +15,7 @@ import { Socket } from 'socket.io-client'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Send, Upload } from 'lucide-react'
+import Chat from './chat'
 
 interface SendMessageProps {
 	user: User
@@ -74,7 +75,7 @@ const SendMessage: FC<SendMessageProps> = ({ socket, setChat, user }) => {
 			return
 		}
 
-		sendMessage({ content: input.trim(), type: 'text', user })
+		sendMessage({ content: input.trim(), type: 'server', user })
 		setInput('')
 	}, [input, user, hasContent, sendMessage])
 

@@ -10,3 +10,7 @@ export interface ChatMessage {
 	type: MessageType
 	user?: User
 }
+
+export interface ChatListMessage extends ChatMessage {
+	own?: boolean
+}
